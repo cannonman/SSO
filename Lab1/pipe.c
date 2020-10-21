@@ -18,18 +18,24 @@ int main(){
 	int fd[2], nbytes;
 	pid_t childpid;
 	char readbuffer[1020];
-
+	int out;
+	
 	pipe(fd);
 
 	switch (pid=fork()){
 		case 0: // child
 			printf("child process %d \n", getpid());
-			sleep(5);
+			sleep(2);
 			printf ("a in child %d \n", a);
-
+			out = dup(STDOUT_FILENO);
 			close(fd[0]);
-			write(fd[1], string1,(strlen(string1)+1));
-			sleep(5);
+			dup2(fd[1], STDOUT_FILENO);
+			execl("/bin/ls", "ls", "-l", NULL);
+		//	write(fd[1], string1,(strlen(string1)+1));
+			sleep(2);
+			close(fd[1]);
+			printf("end of child \n");
+			exit(0);
 			break;
 
 		case -1: //error
@@ -41,10 +47,11 @@ int main(){
 			a++;
 			printf("a in parent: %d \n", a);
 			printf("parent process, %d \n", getppid());
-			sleep(6);
+			sleep(3);
 			close(fd[1]);
-			nbytes = read(fd[0], readbuffer, sizeof(readbuffer));
-			printf("received message:\n %s \n", readbuffer);
+			printf("aaaa\n");
+			dup2(fd[0], 0);
+			execl("/bin/grep", "grep", ".c", "-", NULL);
 			printf("size: %d \n", strlen(readbuffer));
 			wait(NULL);
 			printf("main process: %d \n", getpid());
