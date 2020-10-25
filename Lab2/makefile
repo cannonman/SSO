@@ -1,10 +1,13 @@
 CC=gcc
 CFLAGS= -Wall -g
 all:
-	g++ -g -o main.o main.cpp
+	g++ -g -o minishell.o minishell.c
 
+shell:
+	g++ -g -o shell.o shell.c
+	./shell.o ls -l
 zip:
-	Lab1.zip
+	Lab2.zip
 
 clean:
 	rm -f *.o
@@ -12,6 +15,6 @@ clean:
 Lab1.zip: *.c *.h Makefile
 	zip $@ $^
 
-pipe:
-	g++ -g -o pipe.o pipe.c
-	./pipe.o
+minishell:
+	g++ -g -o minishell.o minishell.c
+	./minishell.o ls -l

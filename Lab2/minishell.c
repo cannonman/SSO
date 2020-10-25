@@ -5,13 +5,7 @@
 #include <sys/wait.h>
 #include <cstring>
 
-char string1[] = "info from child aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n";
-char string2[] = "info from parent\n";
-
 int main(){
-	int a = 64;
-	int b = 65;
-	int c = 66;
 	int pid;
 	printf("main process: %d \n",getpid());
 	
