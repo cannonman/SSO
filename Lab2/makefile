@@ -5,7 +5,7 @@ all:
 
 shell:
 	g++ -g -o shell.o shell.c
-	./shell.o ls -l
+	./shell.o ls -l  cat 'end_of_ls'
 zip:
 	Lab2.zip
 
@@ -14,7 +14,3 @@ clean:
 
 Lab1.zip: *.c *.h Makefile
 	zip $@ $^
-
-minishell:
-	g++ -g -o minishell.o minishell.c
-	./minishell.o ls -l

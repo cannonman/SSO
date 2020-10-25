@@ -5,48 +5,46 @@
 #include <sys/wait.h>
 #include <cstring>
 
-char *comm [10];
-char *arg [10];
+int out;
+int fd[2];
 
-void forker(int arg, char *argv[]){
-	
-	int fd[2];
-	char readbuffer[100];
+
+void first_pipe(int arg, char *argv[], int argc){
 	int pid;
-	int out;
-	char *path [15] = "/bin/";
-       	path += argv[arg];
+	char path [15] ={ "/bin/" } ;
+	for (int i = 0; i<strlen(argv[arg]);i++){
+		path[i+5] = argv[arg][i];
+	}
 
+	printf("%s, %s, %s \n", path, argv[arg], argv[arg+1]);
 	switch(pid=fork()){
 		case 0: //child
-			out = dup(STDOUT_FILENO);
+			//dup2(0, fd[0]);
 			close(fd[0]);
-			dup2(fd[1], STDOUT_FILENO);
+			//dup2(fd[1], STDOUT_FILENO);
+			printf("%s, %s, %s \n", path, argv[arg], argv[arg+1]);
 			execl (path, argv[arg], argv[arg+1], NULL);
-			close(fd[1]);
-			exit(0);
 			break;
 		case -1:
 			printf("error");
 			break;
 
 		default: //parent
-			sleep(1);
 			close(fd[1]);
-			dup2(fd[0],0);
-			execl("/bib/echo", "echo", NULL);
-			exit(0);
-			break;	
+			if(arg+2<argc){
+				first_pipe(arg+2, argv, argc);
+					
+			}
+			wait(NULL);
+
 	}
+	exit(0);
+
 }
 
 
 int main(int argc, char *argv[]){
 	
-	printf("%s \n", argv[0]);
-	printf("%s \n", argv[1]);
-	printf("%s \n", argv[2]);
-		
-	forker(1, argv);
+	first_pipe(1, argv, argc-1);
 	return 0;
 }
